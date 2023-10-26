@@ -7,21 +7,23 @@ def find_empty(board):
 
 
 def solve_board(board):
-    temp = find_empty(board)
-    if not temp:
-        return True
+    if isValidSudoku(board):
+        temp = find_empty(board)
+        if not temp:
+            return True
+        else:
+            row,col = temp
+
+        for i in range(1,10):
+            if isValid(board, i, (row,col)):
+                board[row][col] = i
+
+                if solve_board(board):
+                    return True
+                
+                board[row][col] = 0
     else:
-        row,col = temp
-
-    for i in range(1,10):
-        if isValid(board, i, (row,col)):
-            board[row][col] = i
-
-            if solve_board(board):
-                return True
-            
-            board[row][col] = 0
-    return False
+        print('BOard is Not solvable')
 
 
 def isValid(board,value,position):
@@ -56,6 +58,37 @@ def print_all(board):
             else:
                 print(str(board[i][j]) + " ", end="")
 
+def isValidSudoku(board):
+    for i in range(9):
+        # create empty dictionaries to keep track of row, column, and block values
+        row = {}
+        column = {}
+        block = {}
+        # calculate the starting index of the current 3x3 block
+        row_cube = 3 * (i//3)
+        column_cube = 3 * (i%3)
+        for j in range(9):
+            # check if the value in the current cell of the row is valid
+            if board[i][j]!=0 and board[i][j] in row:
+                return False
+            row[board[i][j]] = 1  # add the value to the row dictionary
+            
+            # check if the value in the current cell of the column is valid
+            if board[j][i]!=0 and board[j][i] in column:
+                return False
+            column[board[j][i]] = 1  # add the value to the column dictionary
+            
+            # calculate the row and column index of the current cell within the 3x3 block
+            rc = row_cube+j//3
+            cc = column_cube + j%3
+            
+            # check if the value in the current cell of the block is valid
+            if board[rc][cc] in block and board[rc][cc]!=0:
+                return False
+            block[board[rc][cc]] = 1  # add the value to the block dictionary
+    return True
+
+
 
 
 '''input_board = []
@@ -75,7 +108,7 @@ input_board=  [
     [9,0,4,0,6,0,0,0,5],
     [0,7,0,3,0,0,0,1,2],
     [1,2,0,0,0,7,4,0,0],
-    [0,4,9,2,0,6,0,0,7]
+    [0,4,9,2,0,6,0,7,7]
 ]
 
 
