@@ -1,5 +1,23 @@
 from tkinter import *
 
+#Solving algorith starts here
+
+def print_all(board):
+    for i in range(len(board)):
+        if i%3 == 0 and i != 0:
+            print("- - - - - - - - - -")
+
+        for j in range(len(board[0])):
+            if j%3 == 0 and j!=0:
+                print('|',end = '')
+
+            if j == 8:
+                print(board[i][j])
+            else:
+                print(str(board[i][j]) + " ", end="")
+
+
+
 def find_empty(board):
     for i in range(len(board)):
         for j in range(len(board[0])):
@@ -12,7 +30,7 @@ def solve_board(board):
     if isValidSudoku(board):
         temp = find_empty(board)
         if not temp:
-            return True
+            return board
         else:
             row,col = temp
 
@@ -21,10 +39,9 @@ def solve_board(board):
                 board[row][col] = i
 
                 if solve_board(board):
-                    return True
+                    return board
                 
                 board[row][col] = 0
-        return board
     else:
         return False
 
@@ -78,19 +95,26 @@ def isValidSudoku(board):
             block[board[rc][cc]] = 1  # add the value to the block dictionary
     return True
 
-
+#GUI Part starts here.
 
 root = Tk()
+
+photoimage = PhotoImage(file='E:\\Test\\Python\\Tkinter\\logo.png')
+
+
 root.title('Soduku Solver')
 root.geometry('526x743')
-root.configure(bg = '#91abc6')
+root.iconphoto(True, photoimage)
+root.configure(bg = '#113946')
 root.resizable(False,False)
 
-label = Label(root, text='Soduku Solver', font=('fortune',54), bg='#91abc6')
-label.place(x=0, y=10, width=526)
+label = Label(root, text='Soduku Solver', font=('fortune',54), bg='#113946', fg='#FFF2D8', justify='center')
+#label.place(x=0, y=10, width=526)
+label.pack()
 
-label = Label(root, text = '', fg = '#1e54a4', bg = '#91abc6', font=('TkDefualtFont',14))
-label.place(x=0, y=92, width=526)
+label = Label(root, text = '', fg = '#FFF2D8', bg = '#113946', font=('TkDefualtFont',14), justify='center')
+#label.place(x=0, y=92, width=526)
+label.pack()
 
 cells = {}
 
@@ -101,14 +125,14 @@ def ValidateNumber(P):
 reg = root.register(ValidateNumber)
 
 def drawGrid():
-    frame = Frame(root, bg='#91abc6')
-    frame.place(x=42, y=151, width=443)
+    frame = Frame(root, bg='#113946')
+    frame.place(x=42, y=151, width=443, height=443)
     font = ('TkTextFont', 14)
 
 
     for i in range(9):
         for j in range(9):
-            entry = Entry(frame,bg='#ffffff', fg='#000000', font = font, borderwidth=5, highlightbackground='#000000', relief=FLAT, justify='center', validate = 'key', validatecommand=(reg,'%P'))
+            entry = Entry(frame,bg='#FFF2D8', fg='#000000', font = font, borderwidth=5, highlightbackground='#000000', relief=FLAT, justify='center', validate = 'key', validatecommand=(reg,'%P'))
 
             entry.place(x=i*49, y=j*49, width=48, height=48)
             cells[(i+2,j+1)] = entry
@@ -144,14 +168,13 @@ def getValues():
         board.append(rows)
     updateValues(board)
 
-btn = Button(root, command=getValues, text='Solve',width=10, font=('TkTextFont',14))
+btn = Button(root, command=getValues, text='Solve',width=15, font=('TkTextFont',14), bg='#BCA37F')
 btn.place(x=25, y=650)
 
-btn = Button(root, command=clearValues, text='Clear', width=10, font=('TkTextFont',14))
-btn.place(x=198, y=650)
+btn = Button(root, command=clearValues, text='Clear', width=15, font=('TkTextFont',14), bg='#BCA37F')
+btn.place(x=325, y=650)
 
-btn = Button(root, command=root.destroy, text='Exit', width=10, font=('TkTextFont',14))
-btn.place(x=370, y=650)
+
 
 
 drawGrid()
@@ -167,51 +190,7 @@ def updateValues(s):
                 cells[(rows,col)].insert(0,sol[rows-2][col-1])
         label.configure(text='Soduku Solved')
     else:
-        label.configure(text='Solution does not exist for this Soduku')
+        label.configure(text='Soduku Unsolvable')
 
 
 root.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
